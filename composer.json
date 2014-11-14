@@ -1,0 +1,28 @@
+{
+    "name": "devonzara/breadcrumbs",
+    "description": "A package to simplify breadcrumbs and page titles in Laravel.",
+    "keywords": ["laravel", "framework", "breadcrumb", "nav", "navigation", "title", "page title", "devonzara", "Devon Zara"],
+    "homepage":"https://github.com/devonzara/breadcrumbs",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Devon Zara",
+            "email": "hello@devonzara.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "5.0.*",
+        "illuminate/contracts": "5.0.*",
+        "doctrine/annotations": "~1.0",
+        "symfony/finder": "2.6.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Devonzara\\Breadcrumbs\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
