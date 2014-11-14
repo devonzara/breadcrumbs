@@ -20,6 +20,56 @@ Because this package is still in development, it has not yet been submit to pack
     ],
 ```
 
+### Set Which Classes Are to Be Scanned
+
+Now, like the `routes` and `events`, we need to define which classes should be scanned. There are two ways to do this.
+
+#### Publish the Package Configurations
+
+The Breadcrumbs configuration has an array where you can define these classes. To publish the config files, run:
+
+> Note: The published files will be located in `config/packages/devonzara/breadcrumbs`.
+
+```
+php artisan publish:config devonzara/breadcrumbs
+```
+
+Simply update the `scan` array with the [qualified name](http://php.net/manual/en/language.namespaces.rules.php) of the controllers you wish to scan.
+
+#### Extend the Service Provider
+
+Alternatively, and similar to how `app/Providers/RouteServiceProvider` is set up, you can create a new `BreadcrumbsServiceProvider`, have it `use \Devonzara\Breadcrumbs\BreadcrumbsServiceProvider as ServiceProvider;`, and then `extend ServiceProvider`.
+
+Once that is done, you simply have to override the `$scan` array like so:
+
+```php
+<?php namespace App\Providers;
+
+use \Devonzara\Breadcrumbs\BreadcrumbsServiceProvider as ServiceProvider;
+
+class RouteServiceProvider extends ServiceProvider {
+
+	/**
+	 * Determines if we will auto-scan in the local environment.
+	 *
+	 * @var bool
+	 */
+	protected $scanWhenLocal = true;
+
+	/**
+	 * The controllers to scan for breadcrumb annotations.
+	 *
+	 * @var array
+	 */
+	protected $scan = [
+		'App\Http\Controllers\HomeController',
+		'App\Namespace\Of\YourController',
+	];
+
+}
+
+```
+
 ## Usage
 
 ### Annotations
@@ -57,7 +107,7 @@ Array
 
 ##### Custom Names
 
-However, the `key` would not make very good breadcrumsb, so let's say you wanted define your own name to be displayed. In that case, you could use:
+However, the `key` would not make very good breadcrumbs, so let's say you wanted define your own name to be displayed. In that case, you could use:
 
 ```
 /**
@@ -67,7 +117,7 @@ However, the `key` would not make very good breadcrumsb, so let's say you wanted
 
 ##### Ancestors (Parents)
 
-Moving forward, we'll obviously want to define other breadcrums. For the purpose of this demonstration, we'll use a basic users system. 
+Moving forward, we'll obviously want to define other breadcrumbs. For the purpose of this demonstration, we'll use a basic users system.
 
 For instance, if you have a page that lists all users; you'll want to create a `users` breadcrumb and reference it back to `home`... We can accomplish that by using the `ancestor` attribute like so:
 
@@ -114,4 +164,4 @@ Tests, tests, and more tests!
 
 ## License
 
-Breadcrums is an open-source package shared under the [MIT license](http://opensource.org/licenses/MIT).
+Breadcrumbs is an open-source package shared under the [MIT license](http://opensource.org/licenses/MIT).

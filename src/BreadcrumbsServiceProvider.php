@@ -21,11 +21,18 @@ class BreadcrumbsServiceProvider extends ServiceProvider {
 	protected $scanWhenLocal = true;
 
 	/**
-	 * The controllers to scan for route annotations.
+	 * The controllers to scan for breadcrumb annotations.
 	 *
 	 * @var array
 	 */
 	protected $scan = [];
+
+	/**
+	 * An instance of Breadcrumbs.
+	 *
+	 * @var \Devonzara\Breadcrumbs\Breadcrumbs
+	 */
+	protected $breadcrumbs;
 
 	/**
 	 * Register the service provider.
@@ -45,6 +52,12 @@ class BreadcrumbsServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 		$this->package('devonzara/breadcrumbs', 'breadcrumbs', __DIR__);
+
+		$this->breadcrumbs = $this->app['breadcrumbs'];
+
+		$this->scan = array_unique(
+			array_merge($this->scan, $this->breadcrumbs->config('scan'))
+		);
 
 		$this->loadBreadcrumbs();
 	}
@@ -71,7 +84,7 @@ class BreadcrumbsServiceProvider extends ServiceProvider {
 			$this->scanBreadcrumbs();
 		}
 
-		if ( ! empty($this->scan) && $this->app['breadcrumbs']->breadcrumbsAreScanned())
+		if ( ! empty($this->scan) && $this->breadcrumbs->breadcrumbsAreScanned())
 		{
 			$this->loadScannedBreadcrumbs();
 		}
@@ -90,7 +103,7 @@ class BreadcrumbsServiceProvider extends ServiceProvider {
 		$scans = $scanner->getBreadcrumbDefinitions();
 
 		file_put_contents(
-			$this->app['breadcrumbs']->getScannedBreadcrumbsPath(), $scans
+			$this->breadcrumbs->getScannedBreadcrumbsPath(), $scans
 		);
 	}
 
@@ -103,7 +116,7 @@ class BreadcrumbsServiceProvider extends ServiceProvider {
 	{
 		$this->app->booted(function()
 		{
-			$breadcrumbs = $this->app['breadcrumbs'];
+			$breadcrumbs = $this->breadcrumbs;
 
 			require $breadcrumbs->getScannedBreadcrumbsPath();
 		});
