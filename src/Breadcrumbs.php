@@ -93,13 +93,17 @@ class Breadcrumbs
 	/**
 	 * Get the breadcrumb trail matching the current action.
 	 *
+	 * @param  array ...$args  Optional, used for passing the route and
+	 *                         title parameters.
 	 * @return array
 	 */
 	public function getBreadcrumbs()
 	{
 		if ( ! $this->currentRouteHasBreadcrumbs()) return [];
 
-		return $this->getBreadcrumbsFor($this->currentKey);
+		$args = current(func_get_args());
+
+		return $this->getBreadcrumbsFor($this->currentKey, $args);
 	}
 
 	/**

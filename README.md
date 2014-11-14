@@ -78,7 +78,7 @@ class RouteServiceProvider extends ServiceProvider {
 
 Annotations are built to be flexible but simple.
 
-#### Basic Usage
+#### Usage
 
 To get started, we'll define a simple 'home' breadcrumb. The following will set the `key` or ***unique*** identifier that can be referenced by other annotations.
 
@@ -144,6 +144,52 @@ Array
             [key] => users
             [name] => Users
             [url] => http://localhost/users
+        )
+
+)
+```
+
+##### Setting Dynamic Route/Title Parameters
+
+This wouldn't be much use if we were restricted to static data. Therefore, we've added the ability to handle parameters. Continuing on our existing use-case, let's say we want to build individual user profiles. Let's take a look at the following example:
+
+```
+@Get("/users/{id}")
+@Crumb({"profile", "{username}'s Profile"}, ancestor="users")
+```
+
+> Note: The route annotation was included to help illustrate the data we'll be passing in later.
+
+Here, we've basically set a template for our breadcrumb's name. The `{username}` part will be automatically replaced later. To make use of this, we need to pass the data to the `getBreadcrumbs()` method.
+
+```php
+Breadcrumbs::getBreadcrumbs([$user->username, $user->id]);
+```
+
+Provided that the user's username is `Admin` and they have an `id` of 1, the output of the `getBreadcrumbs()` method in this case would be:
+
+```
+Array
+(
+    [home] => Array
+        (
+            [key] => home
+            [name] => home
+            [url] => http://localhost
+        )
+
+    [users] => Array
+        (
+            [key] => users
+            [name] => Users
+            [url] => http://localhost/users
+        )
+
+    [profile] => Array
+        (
+            [key] => profile
+            [name] => Admin's Profile
+            [url] => http://localhost/users/1
         )
 
 )
