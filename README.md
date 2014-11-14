@@ -30,19 +30,19 @@ Annotations are built to be flexible but simple.
 
 #### Basic Usage
 
-To get started, we can define a simple 'home' breadcrumb. The following will set the `key` or unique identifier that can be referenced by other annotations.
+To get started, we'll define a simple 'home' breadcrumb. The following will set the `key` or ***unique*** identifier that can be referenced by other annotations.
 
-```PHP
+> Note: When only a key is set, it will also be used as the display name for that crumb.
+
+```
 /**
  * @Crumb("home")
  */
 ```
 
-> Note: When only a key is set, it will also be used as the display name for that crumb.
+This package doesn't have a method to render the breadcrumbs; we're leaving that up to you. However, you can use `Breadcrumbs::getBreadcrumbs()` to fetch the `trail` or an array of the breadcrumbs for the current route. If used within' on the `home` page, you'll get the following output.
 
-This package doesn't currently have a method to render the breadcrumbs, we'll leave that up to you. However, you can use `Breadcrumbs::getBreadcrumbs()` to fetch an array of crumbs for the current route. If used on the `home` view with the above `@Crum` define, you'll get the following output.
-
-```PHP
+```
 Array
 (
     [home] => Array
@@ -55,20 +55,48 @@ Array
 )
 ```
 
-However, let's say you wanted to use a name that other than they key. In that case, you could use:
+##### Custom Names
 
-```PHP
+However, the `key` would not make very good breadcrumsb, so let's say you wanted define your own name to be displayed. In that case, you could use:
+
+```
 /**
  * @Crumb({"home", "Acme Homepage"})
  */
 ```
 
-Moving forward, we'll obviously want to define other breadcrums. We'll use the example of a basic users system. For instance, if you have a listing of all users; you'll want to create a `users` breadcrumb for it and reference it back to `home`... We accomplish that by using the `ancestor` attribute like so:
+##### Ancestors (Parents)
 
-```PHP
+Moving forward, we'll obviously want to define other breadcrums. For the purpose of this demonstration, we'll use a basic users system. 
+
+For instance, if you have a page that lists all users; you'll want to create a `users` breadcrumb and reference it back to `home`... We can accomplish that by using the `ancestor` attribute like so:
+
+```
 /**
  * @Crumb({"users", "Users"}, ancestor="home")
  */
+```
+
+`Breadcrumbs::getBreadcrumbs()` would now output:
+
+```
+Array
+(
+    [home] => Array
+        (
+            [key] => home
+            [name] => home
+            [url] => http://localhost
+        )
+
+    [users] => Array
+        (
+            [key] => users
+            [name] => Users
+            [url] => http://localhost/users
+        )
+
+)
 ```
 
 ### Method Calls
