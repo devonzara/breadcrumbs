@@ -2,7 +2,7 @@
 
 > **Note:** This project is currently unstable and under heavy development.
 
-Breadcrumbs is a [Laravel 5](http://laravel.com) package to simplify the generation of breadcrumbs using annotations. Additionally, breadcrumbs may be built using class methods within' your code if preferred.
+Breadcrumbs is a [Laravel 5](http://laravel.com) package to simplify the generation of breadcrumbs using annotations.
 
 ## Installation
 
