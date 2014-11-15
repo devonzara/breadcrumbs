@@ -22,7 +22,7 @@ Because this package is still in development, it has not yet been submit to pack
 
 ### Set Which Classes Are to Be Scanned
 
-Now, like the `routes` and `events`, we need to define which classes should be scanned. There are two ways to do this.
+Secondly, we need to define which classes should be scanned for breadcrumbs. This is similar to how the `route` and `event` scanners work in Laravel 5. To do this, you have two options.
 
 #### Publish the Package Configurations
 
@@ -73,8 +73,6 @@ class RouteServiceProvider extends ServiceProvider {
 ## Usage
 
 ### Annotations
-
-> NOTE: SECTION INCOMPLETE
 
 Annotations are built to be flexible but simple.
 
@@ -194,6 +192,46 @@ Array
 
 )
 ```
+
+#### Class-level Ancestors
+
+Class-level ancestors allow you to set the ancestors for every breadcrumb within' the controller.
+
+Let's assume you have a UsersController where each method should have a `users` breadcrumb as its ancestor. We can easily define this at the top of our controller, just above the `class` but below the `use` statements.
+
+```
+/**
+ * @Ancestor("users")
+ */
+class UsersController {
+
+   /**
+    * @Get("/users")
+    * @Crumb({"users", "Users"})
+    */
+    public function index()
+    {
+        //
+    }
+
+   /**
+    * @Get("/users/{id}")
+    * @Crumb({"profile", "{username}'s Profile"})
+    */
+    public function show()
+    {
+        //
+    }
+
+}
+
+```
+
+The `users` breadcrumb will be smart enough not to apply an ancestor to itself; however, the `profile` breadcrumb will have `users` as its ancestor.
+
+Much like Middleware in Laravel 5, or Filters in Laravel 4, you can also apply `, only={"methodName"}` or `, except={"methodName"}` to the `@Ancestor` annotation to exclude certain methods from inheriting a class-level ancestor.
+
+> Note: Method-level ancestors will override class-level ancestors.
 
 ### Method Calls
 
