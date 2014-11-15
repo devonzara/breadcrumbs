@@ -74,8 +74,6 @@ class RouteServiceProvider extends ServiceProvider {
 
 ### Annotations
 
-> NOTE: SECTION INCOMPLETE
-
 Annotations are built to be flexible but simple.
 
 #### Usage
@@ -194,6 +192,46 @@ Array
 
 )
 ```
+
+#### Class-level Ancestors
+
+Class-level ancestors allow you to set the ancestors for every breadcrumb within' the controller.
+
+Let's assume you have a UsersController where each method should have a `users` breadcrumb as its ancestor. We can easily define this at the top of our controller, just above the `class` but below the `use` statements.
+
+```
+/**
+ * @Ancestor("users")
+ */
+class UsersController {
+
+   /**
+    * @Get("/users")
+    * @Crumb({"users", "Users"})
+    */
+    public function index()
+    {
+        //
+    }
+
+   /**
+    * @Get("/users/{id}")
+    * @Crumb({"profile", "{username}'s Profile"})
+    */
+    public function show()
+    {
+        //
+    }
+
+}
+
+```
+
+The `users` breadcrumb will be smart enough not to apply an ancestor to itself; however, the `profile` breadcrumb will have `users` as its ancestor.
+
+Much like Middleware in Laravel 5, or Filters in Laravel 4, you can also apply `, only={"methodName"}` or `, except={"methodName"} to the `@Ancestor` annotation to exclude certain methods from inheriting a class-level ancestor.
+
+> Note: Method-level ancestors will override class-level ancestors.
 
 ### Method Calls
 
