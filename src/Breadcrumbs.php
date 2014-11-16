@@ -6,8 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Foundation\Application;
 use Devonzara\Breadcrumbs\Exceptions\UndefinedBreadcrumbException;
 
-class Breadcrumbs
-{
+class Breadcrumbs {
 
 	/**
 	 * The application instance.

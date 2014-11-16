@@ -1,9 +1,7 @@
 <?php namespace Devonzara\Breadcrumbs\Annotations\Annotations;
 
-use ReflectionClass;
 use ReflectionMethod;
 use Devonzara\Breadcrumbs\Annotations\MethodBreadcrumb;
-use Devonzara\Breadcrumbs\Annotations\BreadcrumbCollection;
 
 /**
  * @Annotation

@@ -1,22 +1,12 @@
 <?php namespace Devonzara\Breadcrumbs\Annotations\Annotations;
 
 use ReflectionClass;
-use ReflectionMethod;
-use Devonzara\Breadcrumbs\Annotations\MethodBreadcrumb;
 use Devonzara\Breadcrumbs\Annotations\BreadcrumbCollection;
 
 /**
  * @Annotation
  */
 class Ancestor extends Annotation {
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function modify(MethodBreadcrumb $breadcrumb, ReflectionMethod $method)
-	{
-		$breadcrumb->ancestor = array_merge($breadcrumb->ancestor, (array) $this->value);
-	}
 
 	/**
 	 * {@inheritdoc}

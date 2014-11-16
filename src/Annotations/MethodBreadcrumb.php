@@ -87,7 +87,7 @@ class MethodBreadcrumb {
 	 */
 	protected function getAncestor()
 	{
-		$classAncestor = $this->getClassAncestorForMethod();
+		$classAncestor = $this->getClassAncestorForCrumb();
 
 		$ancestor = $this->ancestor ?: $classAncestor;
 
@@ -99,10 +99,10 @@ class MethodBreadcrumb {
 	 *
 	 * @return bool
 	 */
-	protected function getClassAncestorForMethod()
+	protected function getClassAncestorForCrumb()
 	{
-		$useClass = $this->ancestorAppliesToMethod(
-			$this->method, $this->classAncestor
+		$useClass = $this->ancestorAppliesToKey(
+			$this->key, $this->classAncestor
 		);
 
 		return $useClass ? $this->classAncestor['name'] : null;

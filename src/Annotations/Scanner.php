@@ -47,7 +47,7 @@ class Scanner {
 	 */
 	public function getBreadcrumbDefinitions()
 	{
-		$output = '<?php '.PHP_EOL.PHP_EOL;
+		$output = '<?php'.PHP_EOL.PHP_EOL;
 
 		$reader = $this->getReader();
 
