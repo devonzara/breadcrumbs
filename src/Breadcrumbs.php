@@ -58,6 +58,13 @@ class Breadcrumbs {
 	protected $buffer;
 
 	/**
+	 * Holds the data for dynamic parameters.
+	 *
+	 * @var array
+	 */
+	protected $parameterData = [];
+
+	/**
 	 * Initialize the instance.
 	 *
 	 * @param  \Illuminate\Contracts\Foundation\Application  $app
@@ -100,9 +107,7 @@ class Breadcrumbs {
 	{
 		if ( ! $this->currentRouteHasBreadcrumbs()) return [];
 
-		$args = current(func_get_args());
-
-		return $this->getBreadcrumbsFor($this->currentKey, $args);
+		return $this->getBreadcrumbsFor($this->currentKey, current(func_get_args()));
 	}
 
 	/**
@@ -120,9 +125,12 @@ class Breadcrumbs {
 			throw new UndefinedBreadcrumbException("Breadcrumb [{$key}] is undefined.");
 		}
 
-		$args = array_slice(func_get_args(), 1);
+		if (is_array(func_get_arg(1)))
+		{
+			$this->parameterData = array_slice(func_get_args(), 1);
+		}
 
-		$this->buildCrumbs($this->currentKey, (array) $args);
+		$this->buildCrumbs($this->currentKey, $this->parameterData);
 
 		return $this->currentTrail->toArray();
 	}
@@ -151,51 +159,58 @@ class Breadcrumbs {
 	 * Compile the crumb trail for the specified key.
 	 *
 	 * @param  string  $key
-	 * @param  array   $args
+	 * @param  array   $data
 	 * @return void
 	 */
-	protected function buildCrumbs($key, array $args = null)
+	protected function buildCrumbs($key, array $data = [])
 	{
 		$crumb = $this->crumbs->get($key);
-		$crumbParameters = (array) current($args);
+		$crumb['data'] = (array) array_splice($data, 0, 2);
 
-		$name = $this->getName($crumb, $crumbParameters);
-		$url = $this->getUrl($crumb, $crumbParameters);
+		$name = $this->getName($crumb);
+		$url = $this->getUrl($crumb);
 
 		$this->prepend($key, $name, $url);
 
 		if ($crumb['parent'])
 		{
-			$this->buildCrumbs($crumb['parent'], (array) array_shift($args));
+			$this->buildCrumbs($crumb['parent'], (array) $data);
 		}
 	}
 
 	/**
 	 * Build the name for the specified crumb.
 	 *
-	 * @param  string  $crumb
-	 * @param  array   $crumbParameters
+	 * @param  array  $crumb
 	 * @return string
 	 */
-	protected function getName($crumb, array &$crumbParameters)
+	protected function getName(array $crumb)
 	{
-		$name = array_splice($crumbParameters, 0, 1);
+		$name = $crumb['name'];
+		$replaceData = ! empty($crumb['data'][0]) ? (array) $crumb['data'][0] : null;
 
-		return preg_replace('/\{(.*?)\??\}/', current($name), $crumb['name']);
+		if ($replaceData != null)
+		{
+			foreach ($replaceData as $replace)
+			{
+				$name = preg_replace('/\{(.*?)\??\}/', $replace, $name);
+			}
+		}
+
+		return $name;
 	}
 
 	/**
 	 * Generate the URL for the specified crumb.
 	 *
-	 * @param  string  $crumb
-	 * @param  array   $crumbParameters
+	 * @param  array  $crumb
 	 * @return string
 	 */
-	protected function getUrl($crumb, array &$crumbParameters)
+	protected function getUrl(array $crumb)
 	{
-		$url = $this->app['url']->action($crumb['action'], $crumbParameters);
+		$parameters = ! empty($crumb['data'][1]) ? $crumb['data'][1] : '';
 
-		return $url;
+		return $this->app['url']->action($crumb['action'], (string) $parameters);
 	}
 
 	/**
@@ -318,6 +333,26 @@ class Breadcrumbs {
 		$index = array_search($key, $this->currentTrail->keys());
 
 		return $after ? ++$index : $index;
+	}
+
+	/**
+	 * Get the data that dynamic parameters are to be replaced with.
+	 *
+	 * @return array
+	 */
+	public function getParameterData()
+	{
+		return $this->parameterData;
+	}
+
+	/**
+	 * Set the data for dynamic parameters to be replaced with.
+	 *
+	 * @param array ...$args
+	 */
+	public function setParameterData()
+	{
+		$this->parameterData = func_get_args();
 	}
 
 	/**
