@@ -16,13 +16,6 @@ class Breadcrumbs {
 	private $app;
 
 	/**
-	 * The application's router.
-	 *
-	 * @var \Illuminate\Routing\Router
-	 */
-	private $router;
-
-	/**
 	 * A Collection of crumbs.
 	 *
 	 * @var \Illuminate\Support\Collection
@@ -34,7 +27,7 @@ class Breadcrumbs {
 	 *
 	 * @var array
 	 */
-	protected $currentTrail;
+	protected $currentTrail = [];
 
 	/**
 	 * They key of route we're currently building.
@@ -55,7 +48,7 @@ class Breadcrumbs {
 	 *
 	 * @var array
 	 */
-	protected $buffer;
+	protected $buffer = [];
 
 	/**
 	 * Holds the data for dynamic parameters.
@@ -68,17 +61,14 @@ class Breadcrumbs {
 	 * Initialize the instance.
 	 *
 	 * @param  \Illuminate\Contracts\Foundation\Application  $app
-	 * @param  \Illuminate\Support\Collection                $collection
 	 */
-	function __construct(Application $app, Collection $collection)
+	function __construct(Application $app)
 	{
 		$this->app = $app;
 
-		$this->router = $app['router'];
+		$this->crumbs = new Collection;
 
-		$this->crumbs = $collection->make();
-
-		$this->currentTrail = $collection->make();
+		$this->currentTrail = new Collection;
 
 		$this->setPageTitle();
 	}
@@ -144,7 +134,7 @@ class Breadcrumbs {
 	{
 		foreach ($this->crumbs as $key => $crumb)
 		{
-			if ($crumb['action'] == $this->router->currentRouteAction())
+			if ($crumb['action'] == $this->app['router']->currentRouteAction())
 			{
 				$this->currentKey = $key;
 
@@ -162,7 +152,7 @@ class Breadcrumbs {
 	 * @param  array   $data
 	 * @return void
 	 */
-	protected function buildCrumbs($key, array $data = [])
+	protected function buildCrumbs($key, array $data)
 	{
 		$crumb = $this->crumbs->get($key);
 		$crumb['data'] = (array) array_splice($data, 0, 2);

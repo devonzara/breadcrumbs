@@ -88,7 +88,7 @@ To get started, we'll define a simple 'home' breadcrumb. The following will set 
  */
 ```
 
-This package doesn't have a method to render the breadcrumbs; we're leaving that up to you. However, you can use `Breadcrumbs::getBreadcrumbs()` to fetch the `trail` or an array of the breadcrumbs for the current route. If used within' on the `home` page, you'll get the following output.
+This package doesn't have a method to render the breadcrumbs; we're leaving that up to you. However, you can use `Breadcrumbs::getBreadcrumbs()` to fetch the `trail` or an array of the breadcrumbs for the current route. If used on the `home` page, you'll get the following output.
 
 ```
 Array
@@ -125,7 +125,7 @@ For instance, if you have a page that lists all users; you'll want to create a `
  */
 ```
 
-`Breadcrumbs::getBreadcrumbs()` would now output:
+`Breadcrumbs::getBreadcrumbs()` would now return:
 
 ```
 Array
@@ -161,7 +161,7 @@ This wouldn't be much use if we were restricted to static data. Therefore, we've
 Here, we've basically set a template for our breadcrumb's name. The `{username}` part will be automatically replaced later. To make use of this, we need to pass the data to the `getBreadcrumbs()` method.
 
 ```php
-Breadcrumbs::getBreadcrumbs([$user->username, $user->id]);
+Breadcrumbs::getBreadcrumbs($user->username, $user->id);
 ```
 
 Provided that the user's username is `Admin` and they have an `id` of 1, the output of the `getBreadcrumbs()` method in this case would be:
@@ -237,10 +237,7 @@ Much like Middleware in Laravel 5, or Filters in Laravel 4, you can also apply `
 
 > NOTE: SECTION INCOMPLETE
 
-Breadcrumbs can be added through the `Breadcrumbs` facade. For example:
-
-    // Breadcrumbs::push($key, $name, $url, array $customData)
-    Breadcrumbs::push('home', 'Acme', route('home'));
+Breadcrumbs can also be built through the `Breadcrumbs` facade.
 
 ## @todo
 
