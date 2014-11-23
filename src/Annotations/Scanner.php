@@ -113,7 +113,7 @@ class Scanner {
 	{
 
 		$breadcrumb = new MethodBreadcrumb([
-			'reflection' => $class, 'method' => $method, 'uses' => $class->name.'@'.$method
+			'reflection' => $class, 'method' => $method, 'uses' => '\\'.$class->name.'@'.$method
 		]);
 
 		$breadcrumbs->push($breadcrumb);
