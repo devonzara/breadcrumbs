@@ -47,7 +47,9 @@ class AnnotationSet {
 			$results = $reader->getMethodAnnotations($method);
 
 			if (count($results) > 0)
+			{
 				$annotations[$method->name] = $results;
+			}
 		}
 
 		return $annotations;
